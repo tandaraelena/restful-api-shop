@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-// .get() it's the method that handles the GET requests. First param it says which subroute to handle and the second one it's a handler
+// .get() it's the method that handles the GET requests. 
+// First param it says which subroute to handle and the second one it's a handler
 router.get('/', (req, res, next) => {
   res.status(200).json({
     message: 'Handling GET requests to /orders'
@@ -9,8 +10,13 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
+  const order = {
+    productId: req.body.productId,
+    quantity: req.body.quantity
+  };
   res.status(201).json({
-    message: 'Handling POST requests to /orders'
+    message: "Handling POST requests to /orders",
+    order
   });
 });
 
