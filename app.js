@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const productsRoutes = require('./api/routes/products')
 const ordersRoutes = require('./api/routes/orders')
@@ -11,6 +12,15 @@ const ordersRoutes = require('./api/routes/orders')
 app.use(morgan('dev'))
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json());
+
+mongoose.connect(
+  "mongodb+srv://tandaraelena:" +
+    process.env.MONGODB_PASSWORD +
+    "@nodejs-shop-34dzq.mongodb.net/test?retryWrites=true&w=majority",
+  {
+    useNewUrlParser: true
+  }
+);
 
 // Cross-Origin Resource Sharing = is a mechanism that uses additional HTTP headers to 
 // tell browsers to allow the web app at one origin to have access to the resources from a different origin
