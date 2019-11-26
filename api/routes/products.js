@@ -6,9 +6,18 @@ const Product = require('../models/product')
 
 // .get() it's the method that handles the GET requests. First param it says which subroute to handle and the second one it's a handler
 router.get('/', (req, res, next) => {
-  res.status(200).json({
-    message: 'Handling GET requests to /products'
-  });
+  Product.find()
+    .exec()
+    .then(results => {
+      console.log(results);
+      res.status(200).json(results);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({
+        message: err
+      })
+    })
 });
 
 router.post('/', (req, res, next) => {
@@ -21,27 +30,42 @@ router.post('/', (req, res, next) => {
 
   product
     .save()
-    .then(res => console.log(res))
-    .catch(error => console.log(("This is the error" + error)));
-
-  res.status(200).json({
-    message: "Handling POST requests to /products",
-    product
-  });
+    .then(result => {
+      console.log(result);;
+      result.status(200).json({
+        message: "Handling POST requests to /products",
+        createdProduct: result
+      });
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(500).json({
+        message: error
+      })
+    });
 });
 
 router.get('/:productId', (req, res, next) => {
   const id = req.params.productId;
-  if(id === 'coat'){
-    res.status(200).json({
-      message: 'Coat product',
-      id
+  Product.findById(id)
+    .exec()
+    .then(doc => {
+      console.log("From database", doc);
+      if(doc){
+        res.status(200).json(doc)
+      } else {
+        res.status(404).json({
+          message: "Not a valid entry found for provided ID"
+        })
+      }
+      res.status(200).json(doc);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({
+        error: err
+      });
     });
-  } else {
-    res.status(200).json({
-      message: 'Other product id'
-    });
-  }
 });
 
 router.patch('/:productId', (req, res, next) => {
@@ -51,9 +75,17 @@ router.patch('/:productId', (req, res, next) => {
 });
 
 router.delete('/:productId', (req, res, next) => {
-  res.status(200).json({
-    message: 'Delete product'
-  })
+  const id = req.params.productId;
+  Product.remove({ _id: id })
+    .exec()
+    .then(result => {
+      console.log(result);
+      res.status(200).json(result)
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({message: err})
+    })
 });
 
 module.exports = router;
