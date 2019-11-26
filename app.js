@@ -18,7 +18,8 @@ mongoose.connect(
     process.env.MONGODB_PASSWORD +
     "@nodejs-shop-34dzq.mongodb.net/test?retryWrites=true&w=majority",
   {
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    useUnifiedTopology: true
   }
 );
 
