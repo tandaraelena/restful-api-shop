@@ -12,6 +12,24 @@ app.use(morgan('dev'))
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json());
 
+// Cross-Origin Resource Sharing = is a mechanism that uses additional HTTP headers to 
+// tell browsers to allow the web app at one origin to have access to the resources from a different origin
+app.use((req, res, next) => {
+  // first param gives access to the server origin,
+  // second one gives access to any client origin ->
+  res.header('Access-Control-Allow-Origin', '*');
+
+  // first param gives access to the server depending on the headers,
+  // second one it's the list with accepted headers ->
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+
+  if (req.method === 'OPTIONS'){
+    res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
+    return res.status(200).json({})
+  }
+  next();
+})
+
 // routes which will handle the requests 
 app.use('/products', productsRoutes);
 app.use('/orders', ordersRoutes)
