@@ -23,6 +23,8 @@ mongoose.connect(
   }
 );
 
+mongoose.Promise = global.Promise;
+
 // Cross-Origin Resource Sharing = is a mechanism that uses additional HTTP headers to 
 // tell browsers to allow the web app at one origin to have access to the resources from a different origin
 app.use((req, res, next) => {

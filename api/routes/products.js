@@ -48,8 +48,16 @@ router.post('/', (req, res, next) => {
     .then(result => {
       console.log(result);;
       res.status(200).json({
-        message: "Handling POST requests to /products",
-        createdProduct: result
+        message: "Handling POST requests to /products = Created a new product succesfully",
+        createdProduct: {
+          name: result.name,
+          price: result.price,
+          _id: result._id,
+          request: {
+            type: "GET",
+            url: "http://localhost:3000/products/" + result._id,
+          }
+        }
       });
     })
     .catch(error => {
@@ -73,7 +81,13 @@ router.get('/:productId', (req, res, next) => {
           message: "Not a valid entry found for provided ID"
         })
       }
-      res.status(200).json(doc);
+      res.status(200).json({
+        product: doc,
+        request: {
+          type: "GET",
+          url: "http://localhost:3000/products/" + doc._id
+        }
+      });
     })
     .catch(err => {
       console.log(err);
@@ -86,6 +100,7 @@ router.get('/:productId', (req, res, next) => {
 router.patch('/:productId', (req, res, next) => {
   const id = req.params.productId;
   const updateOps = {};
+  console.log(res)
 
   for(const ops of req.body){
     updateOps[ops.propName] = ops.value;
@@ -93,8 +108,13 @@ router.patch('/:productId', (req, res, next) => {
   Product.update({ _id: id }, { $set: updateOps })
     .exec()
     .then(result => {
-      console.log(result);
-      res.status(200).json(result)
+      res.status(200).json({
+        message: "Product updated",
+        request: {
+          type: "GET",
+          url: "http://localhost:3000/products/" + id
+        }
+      })
     })
     .catch(err => {
       console.log(err);
@@ -108,7 +128,13 @@ router.delete('/:productId', (req, res, next) => {
     .exec()
     .then(result => {
       console.log(result);
-      res.status(200).json(result)
+      res.status(200).json({
+        message: "Product deleted",
+        request: {
+          type: "DELETE",
+          url: "http://localhost:3000/products"
+        }
+      })
     })
     .catch(err => {
       console.log(err);
