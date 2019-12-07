@@ -8,7 +8,7 @@ const Product = require('../models/product')
 router.get('/', (req, res, next) => {
   // .select accepts the exactly fields that you want to fetch
   Product.find()
-    .select("name price _id")
+    .select("_id name price")
     .exec()
     .then(results => {
       const response = {
@@ -131,7 +131,7 @@ router.delete('/:productId', (req, res, next) => {
       res.status(200).json({
         message: "Product deleted",
         request: {
-          type: "DELETE",
+          type: "GET",
           url: "http://localhost:3000/products"
         }
       })
