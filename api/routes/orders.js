@@ -69,9 +69,9 @@ router.post('/', (req, res, next) => {
 });
 
 router.get('/:orderId', (req, res, next) => {
-  // const orderId = req.params.orderId;
+  const orderId = req.params.orderId;
 
-  Order.findById(req.body.orderId)
+  Order.findById(orderId)
     .exec()
     .then(order => {
       if (!order) {
