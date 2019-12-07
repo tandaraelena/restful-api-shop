@@ -9,7 +9,8 @@ const Order = require('../models/order')
 // First param it says which subroute to handle and the second one it's a handler
 router.get('/', (req, res, next) => {
   Order.find()
-    .select("_id quantity product")
+    .select("_id quantity")
+    .populate("product", "name")
     .exec()
     .then(docs => {
       res.status(200).json({
@@ -72,6 +73,7 @@ router.get('/:orderId', (req, res, next) => {
   const orderId = req.params.orderId;
 
   Order.findById(orderId)
+    .populate('product')
     .exec()
     .then(order => {
       if (!order) {
