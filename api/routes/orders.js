@@ -69,25 +69,50 @@ router.post('/', (req, res, next) => {
 });
 
 router.get('/:orderId', (req, res, next) => {
-  const orderId = req.params.orderId;
-  if (orderId === 'order-id-1'){
-    res.status(201).json({
-      message: 'Get the order by id---> Order details',
-      orderId
+  // const orderId = req.params.orderId;
+
+  Order.findById(req.body.orderId)
+    .exec()
+    .then(order => {
+      if (!order) {
+        res.status(404).json({
+          message: "Order not found"
+        })
+      }
+      res.status(200).json({
+        order: order,
+        request: {
+          type: "GET",
+          url: "http://localhost:3000/orders/"
+        }
+      });
     })
-  } else {
-    res.status(200).json({
-      message: 'Any other id'
+    .catch(err => {
+      res.status(500).json({
+        message: "Order not found",
+        uglyErrorSays: err
+      })
     })
-  }
 })
 
 router.delete('/:orderId', (req, res, next) => {
   const orderId = req.params.orderId;
-  res.status(200).json({
-    message: 'Order deleted',
-    orderId
-  })
+  Order.remove({ _id: orderId })
+    .exec()
+    .then(result => {
+      res.status(200).json({
+        message: "Order deleted",
+        request: {
+          type: "GET",
+          url: "http://localhost:3000/orders"
+        }
+      })
+    })
+    .catch(err => {
+      res.status(500).json({ 
+        message: "Couldn't delete your order",
+        erorr: err })
+    })
 })
 
 module.exports = router;
