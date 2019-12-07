@@ -9,7 +9,10 @@ const ordersRoutes = require('./api/routes/orders')
 
 // use morgan to easily log errors and body-parser to extract data and parse 
 // into the format that's easier for us to read (json and urlencoded)
-app.use(morgan('dev'))
+app.use(morgan('dev'));
+// this middleware will make the uploads folder available to everywhere
+// http://localhost:3000/uploads/0001.jpg
+app.use("/uploads", express.static('uploads'));
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json());
 
