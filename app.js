@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 
 const productsRoutes = require('./api/routes/products')
 const ordersRoutes = require('./api/routes/orders')
+const usersRoutes = require('./api/routes/users')
 
 // use morgan to easily log errors and body-parser to extract data and parse 
 // into the format that's easier for us to read (json and urlencoded)
@@ -48,7 +49,8 @@ app.use((req, res, next) => {
 
 // routes which will handle the requests 
 app.use('/products', productsRoutes);
-app.use('/orders', ordersRoutes)
+app.use('/orders', ordersRoutes);
+app.use("/users", usersRoutes);
 
 app.use((req, res, next) => {
   const err = new Error('Not Found');
