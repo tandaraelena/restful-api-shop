@@ -70,7 +70,12 @@ router.post('/login', (req, res, next) => {
         })
       })
     })
-    .catch(err => console.log(err))
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({
+        error: err
+      })
+    })
 })
 
 router.delete("/:userId", (req,res,next) => {
