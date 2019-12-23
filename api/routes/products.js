@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const multer = require('multer');
+const checkAuth = require('../middleware/check-auth')
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => 
@@ -63,27 +64,28 @@ router.get('/', (req, res, next) => {
     });
 });
 
-router.post('/', upload.single('productImage'), (req, res, next) => {
-    console.log(req.file)
+router.post("/", upload.single("productImage"), checkAuth, (req, res, next) => {
+  console.log(req.file);
   // console.log(req.file)  // console.log(req.file) --> see the uploaded file/image
-  if (!req.file){
+  if (!req.file) {
     res.status(500).json({
-      message: "Image extension not accepted",
-    })
-  }
-    const product = new Product({
-      _id: new mongoose.Types.ObjectId(),
-      name: req.body.name,
-      price: req.body.price,
-      productImage: req.file.path
+      message: "Image extension not accepted"
     });
+  }
+  const product = new Product({
+    _id: new mongoose.Types.ObjectId(),
+    name: req.body.name,
+    price: req.body.price,
+    productImage: req.file.path
+  });
 
   product
     .save()
     .then(result => {
       console.log(result);
       res.status(200).json({
-        message: "Handling POST requests to /products = Created a new product succesfully",
+        message:
+          "Handling POST requests to /products = Created a new product succesfully",
         createdProduct: {
           name: result.name,
           price: result.price,
@@ -91,7 +93,7 @@ router.post('/', upload.single('productImage'), (req, res, next) => {
           productImage: result.productImage,
           request: {
             type: "GET",
-            url: "http://localhost:3000/products/" + result._id,
+            url: "http://localhost:3000/products/" + result._id
           }
         }
       });
@@ -100,7 +102,7 @@ router.post('/', upload.single('productImage'), (req, res, next) => {
       console.log(error);
       res.status(500).json({
         message: error
-      })
+      });
     });
 });
 
