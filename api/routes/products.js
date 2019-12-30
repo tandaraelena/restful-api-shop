@@ -64,8 +64,7 @@ router.get('/', (req, res, next) => {
     });
 });
 
-router.post("/", upload.single("productImage"), checkAuth, (req, res, next) => {
-  console.log(req.file);
+router.post("/", checkAuth, upload.single("productImage"), (req, res, next) => {
   // console.log(req.file)  // console.log(req.file) --> see the uploaded file/image
   if (!req.file) {
     res.status(500).json({
@@ -136,7 +135,7 @@ router.get('/:productId', (req, res, next) => {
     });
 });
 
-router.patch('/:productId', (req, res, next) => {
+router.patch('/:productId', checkAuth, (req, res, next) => {
   const id = req.params.productId;
   const updateOps = {};
   console.log(res)
@@ -161,7 +160,7 @@ router.patch('/:productId', (req, res, next) => {
     })
 });
 
-router.delete('/:productId', (req, res, next) => {
+router.delete('/:productId', checkAuth, (req, res, next) => {
   const id = req.params.productId;
   Product.remove({ _id: id })
     .exec()
